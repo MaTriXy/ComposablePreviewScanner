@@ -55,23 +55,29 @@ internal class ScanResultLogger {
 
     fun printFullInfoLog() {
         if (!isLoggingEnabled) return
+        val logBuilder = StringBuilder()
 
-        println("==============================================================")
-        println("Scan Result Dumper")
-        println("==============================================================")
-        println(scanningSource)
+        logBuilder.run {
+            appendLine("==============================================================")
+            appendLine("Scan Result Dumper")
+            appendLine("==============================================================")
+            appendLine(scanningSource)
+        }
         classpath?.run {
-            println("Source set (compiled classes path): $rootDir/$packagePath")
+            logBuilder.appendLine("Source set (compiled classes path): $rootDir/$packagePath")
         }
         scanResultFileName?.run {
-            println("File to dump Scan Result: $this")
+            logBuilder.appendLine("File to dump Scan Result: $this")
         }
         customPreviewsFileName?.run {
-            println("File to dump Custom Previews: $this")
+            logBuilder.appendLine("File to dump Custom Previews: $this")
         }
-        println()
-        println("Time to dump scan result: $dumpScanResultTime ms")
-        println("==============================================================")
-        println()
+        logBuilder.run {
+            appendLine()
+            appendLine("Time to dump scan result: $dumpScanResultTime ms")
+            appendLine("==============================================================")
+            appendLine()
+        }
+        println(logBuilder.toString())
     }
 }

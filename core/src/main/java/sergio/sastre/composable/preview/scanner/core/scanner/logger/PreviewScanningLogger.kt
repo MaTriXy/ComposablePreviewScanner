@@ -74,23 +74,29 @@ internal class PreviewScanningLogger {
 
     fun printFullInfoLog() {
         if (!isLoggingEnabled) return
+        val logBuilder = StringBuilder()
 
-        println("==============================================================")
-        println("Composable Preview Scanner")
-        println("==============================================================")
-        println(scanningSource)
-        classpath?.run {
-            println("Source set (compiled classes path): $rootDir/$packagePath")
+        logBuilder.run {
+            appendLine("==============================================================")
+            appendLine("Composable Preview Scanner")
+            appendLine("==============================================================")
+            appendLine(scanningSource)
         }
-        println()
-        println("@Preview annotation: $annotationName")
-        println("Amount of @Previews found: $previewsAmount")
-        println()
-        println("Time to scan target files: $scanningFilesTime ms")
-        println("Time to find @Previews: $findPreviewsTime ms")
-        println("--------------------------------------------------------------")
-        println("Total time: ${scanningFilesTime + findPreviewsTime} ms")
-        println("==============================================================")
-        println()
+        classpath?.run {
+            logBuilder.appendLine("Source set (compiled classes path): $rootDir/$packagePath")
+        }
+        logBuilder.run {
+            appendLine()
+            appendLine("@Preview annotation: $annotationName")
+            appendLine("Amount of @Previews found: $previewsAmount")
+            appendLine()
+            appendLine("Time to scan target files: $scanningFilesTime ms")
+            appendLine("Time to find @Previews: $findPreviewsTime ms")
+            appendLine("--------------------------------------------------------------")
+            appendLine("Total time: ${scanningFilesTime + findPreviewsTime} ms")
+            appendLine("==============================================================")
+            appendLine()
+        }
+        println(logBuilder.toString())
     }
 }
