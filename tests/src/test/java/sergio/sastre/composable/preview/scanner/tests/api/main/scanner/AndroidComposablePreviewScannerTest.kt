@@ -7,6 +7,7 @@ import sergio.sastre.composable.preview.scanner.AndroidStringProvider
 import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeTrue
 import org.junit.Test
+import sergio.sastre.composable.preview.scanner.AndroidStringConstructorParameterProvider
 import sergio.sastre.composable.preview.scanner.ListProvider
 import sergio.sastre.composable.preview.scanner.android.AndroidComposablePreviewScanner
 import sergio.sastre.composable.preview.scanner.android.customextraannotation.Device
@@ -346,6 +347,22 @@ class AndroidComposablePreviewScannerTest {
 
         assert(previewsWithParameterNoLimit.size == stringProviderValues.size)
         previewsWithParameterNoLimit.onEachIndexed { index, preview ->
+            assert(preview.toString().substringAfterLast("_") == index.toString())
+        }
+    }
+
+    @Test
+    fun `GIVEN preview parameters with values provided in constructor StringProvider THEN it creates one preview for every parameter with the index at the end of its name`() {
+        val stringProviderValues = AndroidStringConstructorParameterProvider().values.toList()
+
+        val previewsWithParameterProviderInConstructor =
+            AndroidComposablePreviewScanner()
+                .scanPackageTrees("sergio.sastre.composable.preview.scanner.android.previewparameters")
+                .filterPreviews { it.group == "provider-in-parameter-constructor" }
+                .getPreviews()
+
+        assert(previewsWithParameterProviderInConstructor.size == stringProviderValues.size)
+        previewsWithParameterProviderInConstructor.onEachIndexed { index, preview ->
             assert(preview.toString().substringAfterLast("_") == index.toString())
         }
     }
