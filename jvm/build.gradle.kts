@@ -24,7 +24,7 @@ publishing {
             }
             groupId = "sergio.sastre.composable.preview.scanner"
             artifactId = "jvm"
-            version = "0.8.1"
+            version = "0.8.2"
         }
     }
 }

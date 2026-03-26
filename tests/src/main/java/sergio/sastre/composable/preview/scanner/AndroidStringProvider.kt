@@ -7,6 +7,10 @@ class AndroidStringProvider : PreviewParameterProvider<String?> {
         get() = sequenceOf("Jim", "Jens", null)
 }
 
+class AndroidStringConstructorParameterProvider(
+    override val values: Sequence<String?> = sequenceOf("Jim")
+) : PreviewParameterProvider<String?>
+
 class ListProvider : PreviewParameterProvider<List<Int?>> {
     override val values: Sequence<List<Int?>>
         get() = sequenceOf(listOf(0, 1, null))
