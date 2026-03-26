@@ -49,7 +49,7 @@ data class ComposablePreviewWithPreviewParameterMapper<T>(
             )
         }
         noArgsConstructor?.isAccessible = true
-        return noArgsConstructor?.call()
+        return noArgsConstructor?.callBy(emptyMap())
     }
 
     private fun getPropertyValue(target: Any, propertyName: String): Any? {
