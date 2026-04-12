@@ -22,6 +22,7 @@ import sergio.sastre.composable.preview.scanner.core.preview.ComposablePreview
 import sergio.sastre.composable.preview.scanner.common.CommonComposablePreviewScanner
 import sergio.sastre.composable.preview.scanner.common.CommonPreviewInfo
 import sergio.sastre.composable.preview.scanner.common.screenshotid.CommonPreviewScreenshotIdBuilder
+import sergio.sastre.composable.preview.scanner.tests.paparazzi.utils.paparazziTestNameSnapshotHandler
 import kotlin.math.ceil
 
 /**
@@ -56,11 +57,10 @@ class PaparazziCommonComposablePreviewInvokeTests(
     @Test
     fun snapshot() {
         val screenshotId = CommonPreviewScreenshotIdBuilder(preview)
-            .ignoreClassName()
-            .ignoreMethodName()
             .doNotIgnoreMethodParametersType()
             .encodeUnsafeCharacters()
             .build()
+            .replace("sergio.sastre.composable.preview.scanner.", "")
 
         val previewInfo = preview.previewInfo
         paparazzi.snapshot(name = screenshotId) {
@@ -162,6 +162,7 @@ object DeviceConfigBuilder {
 object PaparazziPreviewRule {
     fun createFor(preview: ComposablePreview<CommonPreviewInfo>): Paparazzi {
         val previewInfo = preview.previewInfo
+        val tolerance = 0.0
         return Paparazzi(
             deviceConfig = DeviceConfigBuilder.build(preview.previewInfo),
             environment = detectEnvironment().copy(compileSdkVersion = 34),
@@ -171,7 +172,8 @@ object PaparazziPreviewRule {
                 false -> SessionParams.RenderingMode.SHRINK
             },
             // maxPercentDifference can be configured here if needed
-            maxPercentDifference = 0.0
+            maxPercentDifference = tolerance,
+            snapshotHandler = paparazziTestNameSnapshotHandler(tolerance)
         )
     }
 }

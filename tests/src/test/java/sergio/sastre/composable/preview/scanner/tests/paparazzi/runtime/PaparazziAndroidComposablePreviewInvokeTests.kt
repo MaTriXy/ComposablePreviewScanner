@@ -18,6 +18,7 @@ import sergio.sastre.composable.preview.scanner.android.device.DevicePreviewInfo
 import sergio.sastre.composable.preview.scanner.android.screenshotid.AndroidPreviewScreenshotIdBuilder
 import sergio.sastre.composable.preview.scanner.core.annotations.RequiresShowStandardStreams
 import sergio.sastre.composable.preview.scanner.core.preview.ComposablePreview
+import sergio.sastre.composable.preview.scanner.tests.paparazzi.utils.paparazziTestNameSnapshotHandler
 
 /**
  * These tests ensure that the invoke() function of a ComposablePreview works as expected
@@ -49,17 +50,17 @@ class PaparazziAndroidComposablePreviewInvokeTests(
     val paparazzi = Paparazzi(
         environment = detectEnvironment().copy(compileSdkVersion = 34),
         deviceConfig = DeviceConfigBuilder.build(preview.previewInfo.device),
-        renderingMode = SessionParams.RenderingMode.SHRINK
+        renderingMode = SessionParams.RenderingMode.SHRINK,
+        snapshotHandler = paparazziTestNameSnapshotHandler()
     )
 
     @Test
     fun snapshot() {
         val screenshotId = AndroidPreviewScreenshotIdBuilder(preview)
-            .ignoreClassName()
-            .ignoreMethodName()
             .doNotIgnoreMethodParametersType()
             .encodeUnsafeCharacters()
             .build()
+            .replace("sergio.sastre.composable.preview.scanner.", "")
 
         paparazzi.snapshot(name = screenshotId) {
             preview()

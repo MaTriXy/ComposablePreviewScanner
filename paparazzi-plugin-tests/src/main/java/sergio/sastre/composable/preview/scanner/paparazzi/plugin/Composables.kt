@@ -37,7 +37,7 @@ fun ScreenSizesExamplePreview() {
     Example("API ${Build.VERSION.SDK_INT}")
 }
 
-@Preview(name = "😍")
+@Preview(name = "ScreenSize")
 @Composable
 fun ScreenSizesExample2Preview(
     @PreviewParameter(NamesProvider ::class) names: List<String>
