@@ -162,6 +162,7 @@ object DeviceConfigBuilder {
 object PaparazziPreviewRule {
     fun createFor(preview: ComposablePreview<CommonPreviewInfo>): Paparazzi {
         val previewInfo = preview.previewInfo
+        val tolerance = 0.0
         return Paparazzi(
             deviceConfig = DeviceConfigBuilder.build(preview.previewInfo),
             environment = detectEnvironment().copy(compileSdkVersion = 34),
@@ -171,8 +172,8 @@ object PaparazziPreviewRule {
                 false -> SessionParams.RenderingMode.SHRINK
             },
             // maxPercentDifference can be configured here if needed
-            maxPercentDifference = 0.0,
-            snapshotHandler = paparazziTestNameSnapshotHandler()
+            maxPercentDifference = tolerance,
+            snapshotHandler = paparazziTestNameSnapshotHandler(tolerance)
         )
     }
 }
