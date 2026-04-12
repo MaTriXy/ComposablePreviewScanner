@@ -16,6 +16,7 @@ import sergio.sastre.composable.preview.scanner.glance.GlancePreviewInfo
 import sergio.sastre.composable.preview.scanner.glance.configuration.GlanceDeviceConfigDimensions
 import sergio.sastre.composable.preview.scanner.glance.configuration.GlanceSnapshotConfigurator
 import sergio.sastre.composable.preview.scanner.glance.screenshotid.GlancePreviewScreenshotIdBuilder
+import sergio.sastre.composable.preview.scanner.tests.paparazzi.utils.paparazziTestNameSnapshotHandler
 
 /**
  * These tests ensure that the invoke() function of a ComposablePreview works as expected
@@ -64,6 +65,7 @@ class PaparazziGlanceComposablePreviewInvokeTests(
         ),
         theme = "Theme.AppCompat.Light",
         renderingMode = SessionParams.RenderingMode.SHRINK,
+        snapshotHandler = paparazziTestNameSnapshotHandler()
     )
 
     @Test

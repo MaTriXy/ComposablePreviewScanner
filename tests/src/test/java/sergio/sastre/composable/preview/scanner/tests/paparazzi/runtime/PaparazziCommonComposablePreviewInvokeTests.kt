@@ -22,6 +22,7 @@ import sergio.sastre.composable.preview.scanner.core.preview.ComposablePreview
 import sergio.sastre.composable.preview.scanner.common.CommonComposablePreviewScanner
 import sergio.sastre.composable.preview.scanner.common.CommonPreviewInfo
 import sergio.sastre.composable.preview.scanner.common.screenshotid.CommonPreviewScreenshotIdBuilder
+import sergio.sastre.composable.preview.scanner.tests.paparazzi.utils.paparazziTestNameSnapshotHandler
 import kotlin.math.ceil
 
 /**
@@ -171,7 +172,8 @@ object PaparazziPreviewRule {
                 false -> SessionParams.RenderingMode.SHRINK
             },
             // maxPercentDifference can be configured here if needed
-            maxPercentDifference = 0.0
+            maxPercentDifference = 0.0,
+            snapshotHandler = paparazziTestNameSnapshotHandler()
         )
     }
 }
