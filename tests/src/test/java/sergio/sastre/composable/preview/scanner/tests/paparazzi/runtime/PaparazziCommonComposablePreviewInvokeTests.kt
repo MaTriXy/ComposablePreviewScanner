@@ -57,11 +57,10 @@ class PaparazziCommonComposablePreviewInvokeTests(
     @Test
     fun snapshot() {
         val screenshotId = CommonPreviewScreenshotIdBuilder(preview)
-            .ignoreClassName()
-            .ignoreMethodName()
             .doNotIgnoreMethodParametersType()
             .encodeUnsafeCharacters()
             .build()
+            .replace("sergio.sastre.composable.preview.scanner.", "")
 
         val previewInfo = preview.previewInfo
         paparazzi.snapshot(name = screenshotId) {

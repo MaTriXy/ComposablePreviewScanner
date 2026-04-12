@@ -83,8 +83,8 @@ class PaparazziGlanceComposablePreviewInvokeTests(
         paparazzi.snapshot(
             view = glanceView,
             name = GlancePreviewScreenshotIdBuilder(preview)
-                .ignoreClassName()
                 .build()
+                .replace("sergio.sastre.composable.preview.scanner.", "")
         )
     }
 }
