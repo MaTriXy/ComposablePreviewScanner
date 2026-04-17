@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/sergio-sastre/ComposablePreviewScanner.svg)](https://jitpack.io/#sergio-sastre/ComposablePreviewScanner)
+[![](https://jitpack.io/v/sergio-sastre/ComposablePreviewScanner.svg)](https://jitpack.io/#sergio-sastre/ComposablePreviewScanner) ![](https://jitpack.io/v/sergio-sastre/ComposablePreviewScanner/month.svg)</br>
 [![](https://img.shields.io/maven-central/v/io.github.sergio-sastre.ComposablePreviewScanner/android)](https://central.sonatype.com/artifact/io.github.sergio-sastre.ComposablePreviewScanner/android)</br>
 
 <a href="https://androidweekly.net/issues/issue-628">
