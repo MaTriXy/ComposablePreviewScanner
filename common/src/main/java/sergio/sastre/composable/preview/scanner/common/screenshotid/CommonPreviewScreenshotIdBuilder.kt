@@ -5,6 +5,9 @@ import sergio.sastre.composable.preview.scanner.core.preview.screenshotid.Defaul
 import sergio.sastre.composable.preview.scanner.core.preview.screenshotid.PreviewScreenshotIdBuilder
 import sergio.sastre.composable.preview.scanner.common.CommonPreviewInfo
 
+@Deprecated(
+    message = "The :common module is deprecated and will be removed in 0.10.0. Use Android Previews instead.",
+)
 class CommonPreviewScreenshotIdBuilder(
     private val composablePreview: ComposablePreview<CommonPreviewInfo>
 ): PreviewScreenshotIdBuilder<CommonPreviewInfo>(

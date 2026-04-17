@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package sergio.sastre.composable.preview.scanner.tests.api.main.screenshotid
 
 import com.google.testing.junit.testparameterinjector.TestParameter
@@ -9,6 +10,7 @@ import sergio.sastre.composable.preview.scanner.common.CommonPreviewInfo
 import sergio.sastre.composable.preview.scanner.common.screenshotid.CommonPreviewScreenshotIdBuilder
 import sergio.sastre.composable.preview.scanner.utils.previewBuilder
 
+@Suppress("DEPRECATION")
 @RunWith(TestParameterInjector::class)
 class CommonComposablePreviewScreenshotIdTest {
 

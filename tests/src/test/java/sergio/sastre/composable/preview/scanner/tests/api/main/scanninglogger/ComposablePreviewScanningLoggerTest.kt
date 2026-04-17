@@ -16,6 +16,7 @@ import sergio.sastre.composable.preview.scanner.glance.GlanceComposablePreviewSc
 import sergio.sastre.composable.preview.scanner.common.CommonComposablePreviewScanner
 import sergio.sastre.composable.preview.scanner.utils.SystemOutputTestRule
 
+@Suppress("DEPRECATION")
 @RunWith(Parameterized::class)
 class ComposablePreviewScanningLoggerTest<T>(
     // New Scanner instance on each test

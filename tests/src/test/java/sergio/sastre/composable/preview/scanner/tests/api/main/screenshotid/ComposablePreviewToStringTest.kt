@@ -6,6 +6,7 @@ import org.junit.Test
 import sergio.sastre.composable.preview.scanner.android.AndroidComposablePreviewScanner
 import sergio.sastre.composable.preview.scanner.common.CommonComposablePreviewScanner
 
+@Suppress("DEPRECATION")
 class ComposablePreviewToStringTest() {
 
     @Test

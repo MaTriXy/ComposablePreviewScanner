@@ -19,6 +19,7 @@ import sergio.sastre.composable.preview.scanner.common.screenshotid.CommonPrevie
  *
  * ./gradlew :tests:recordRoborazziDebug --tests 'CommonComposablePreviewInvokeExpectedErrorTests' -Plibrary=roborazzi
  */
+@Suppress("DEPRECATION")
 @RunWith(ParameterizedRobolectricTestRunner::class)
 class CommonComposablePreviewInvokeExpectedErrorTests(
     private val preview: ComposablePreview<CommonPreviewInfo>,

@@ -3,6 +3,7 @@ package sergio.sastre.composable.preview.scanner.tests.api.main.scanner
 import org.junit.Test
 import sergio.sastre.composable.preview.scanner.jvm.JvmAnnotationScanner
 
+@Suppress("DEPRECATION")
 class JvmAnnotationScannerTest {
 
     @Test
