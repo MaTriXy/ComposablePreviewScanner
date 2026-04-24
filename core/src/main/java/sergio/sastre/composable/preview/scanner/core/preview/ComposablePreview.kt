@@ -1,6 +1,7 @@
 package sergio.sastre.composable.preview.scanner.core.preview
 
 import androidx.compose.runtime.Composable
+import io.github.classgraph.AnnotationClassRef
 import io.github.classgraph.AnnotationInfoList
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
@@ -35,7 +36,6 @@ interface ComposablePreview<T> {
  * 1. Repeatable annotations -> if duplicated only one is taken
  * 2. Annotations that have as params any of the following types (throws exceptions):
  *  2.1. Annotation
- *  2.2  KClass
  */
 inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
     val annotationParams = otherAnnotationsInfo
@@ -50,13 +50,19 @@ inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
         val parameter = primaryConstructor?.parameters?.find { it.name == paramName }
         if (parameter != null) {
             val parameterType = parameter.type.classifier as? KClass<*>
-            val value = if (parameterType?.java?.isEnum == true) {
-                // Resolve enum constant by its name
-                parameterType.java.enumConstants.firstOrNull { enumConstant ->
-                    (enumConstant as? Enum<*>)?.name == paramValue.toString().substringAfterLast(".")
+            val value = when {
+                parameterType?.java?.isEnum == true -> {
+                    // Resolve enum constant by its name
+                    parameterType.java.enumConstants.firstOrNull { enumConstant ->
+                        (enumConstant as? Enum<*>)?.name == paramValue.toString().substringAfterLast(".")
+                    }
                 }
-            } else {
-                paramValue
+                parameterType == KClass::class -> {
+                    (paramValue as? AnnotationClassRef)?.let {
+                        Class.forName(it.name).kotlin
+                    } ?: paramValue
+                }
+                else -> paramValue
             }
             annotationValues[parameter] = value
         }

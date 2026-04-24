@@ -11,6 +11,7 @@ import sergio.sastre.composable.preview.scanner.AndroidStringConstructorParamete
 import sergio.sastre.composable.preview.scanner.ListProvider
 import sergio.sastre.composable.preview.scanner.android.AndroidComposablePreviewScanner
 import sergio.sastre.composable.preview.scanner.android.customextraannotation.Device
+import sergio.sastre.composable.preview.scanner.android.customextraannotation.Foo
 import sergio.sastre.composable.preview.scanner.android.customextraannotation.ScreenshotTestConfig
 import sergio.sastre.composable.preview.scanner.android.excluded.ExcludeScreenshot
 import sergio.sastre.composable.preview.scanner.android.included.IncludeScreenshot
@@ -407,6 +408,7 @@ class AndroidComposablePreviewScannerTest {
         assert(extraAnnotation?.locale == "ar")
         assert(extraAnnotation?.array?.get(0) == "1")
         assert(extraAnnotation?.array?.get(1) == "2")
+        assert(extraAnnotation?.clazz == Foo::class)
     }
 
     @Repeatable
