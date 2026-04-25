@@ -1,6 +1,9 @@
 package sergio.sastre.composable.preview.scanner.core.preview
 
 import sergio.sastre.composable.preview.scanner.core.preview.exception.PreviewParameterIsNotFirstArgumentException
+import io.github.classgraph.AnnotationClassRef
+import io.github.classgraph.AnnotationInfoList
+import sergio.sastre.composable.preview.scanner.core.scanresult.filter.PREVIEW_WRAPPER_ANNOTATION
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -15,6 +18,7 @@ import kotlin.reflect.jvm.kotlinFunction
 internal class ComposablePreviewInvocationHandler(
     private val composableMethod: Method,
     private val parameter: Any?,
+    private val annotationsInfo: AnnotationInfoList?,
 ) : InvocationHandler {
 
     /**
@@ -24,11 +28,60 @@ internal class ComposablePreviewInvocationHandler(
     object NoParameter
 
     override fun invoke(proxy: Any?, method: Method?, args: Array<out Any>?): Any? {
+        if (method?.name != "invoke") return method?.invoke(this, *(args ?: emptyArray()))
+
         val safeArgs: Array<out Any?> = fillMissingComposeArgs(args)
+        val wrapperData = getPreviewWrapperProvider()
+
+        if (wrapperData != null && args != null && args.size >= 2) {
+            return invokeWithWrapper(wrapperData, args, safeArgs)
+        }
+
+        return invokeDirectly(
+            composer = args?.getOrNull(args.size - 2),
+            changed = args?.getOrNull(args.size - 1) as? Int ?: 0,
+            safeArgs = safeArgs
+        )
+    }
+
+    private fun invokeWithWrapper(
+        wrapperData: Pair<Any, Method?>,
+        args: Array<out Any>,
+        safeArgs: Array<out Any?>
+    ): Any? {
+        val (provider, wrapMethod) = wrapperData
+        if (wrapMethod != null) {
+            val composer = args[args.size - 2]
+            val changed = args[args.size - 1]
+
+            // This lambda mimics a @Composable () -> Unit
+            val content = object : (Any?, Int) -> Unit {
+                override fun invoke(p1: Any?, p2: Int) {
+                    // Call the actual composable method with the wrapper's composer
+                    invokeDirectly(p1, p2, safeArgs)
+                }
+            }
+            return wrapMethod.invoke(provider, content, composer, changed)
+        }
+        return null
+    }
+
+    private fun invokeDirectly(composer: Any?, changed: Int, safeArgs: Array<out Any?>): Any? {
+        val allParams = composableMethod.kotlinFunction!!.parameters
+        val hasDefaultParams = allParams.any { it.isOptional }
+
+        // Update the composer and changed values in the arguments
+        val updatedArgs = arrayOf(*safeArgs)
+        if (updatedArgs.size >= (if (hasDefaultParams) 3 else 2)) {
+            val offset = if (hasDefaultParams) 1 else 0
+            updatedArgs[updatedArgs.size - 2 - offset] = composer
+            updatedArgs[updatedArgs.size - 1 - offset] = changed
+        }
+
         val safeArgsWithParam =
             when (parameter != NoParameter) {
-                true -> arrayOf(parameter, *safeArgs)
-                false -> safeArgs
+                true -> arrayOf(parameter, *updatedArgs)
+                false -> updatedArgs
             }
 
         val isInsideClass = !Modifier.isStatic(composableMethod.modifiers)
@@ -40,6 +93,16 @@ internal class ComposablePreviewInvocationHandler(
                 *safeArgsWithParam
             )
         }
+    }
+
+    private fun getPreviewWrapperProvider(): Pair<Any, Method?>? {
+        val annotationParams = annotationsInfo
+            ?.filter { it.name == PREVIEW_WRAPPER_ANNOTATION }
+            ?.firstOrNull()?.parameterValues
+            ?: return null
+
+        val wrapperClassRef = annotationParams.getValue("wrapper") as? AnnotationClassRef ?: return null
+        return PreviewWrapperCache.getProviderAndWrapMethod(wrapperClassRef.name)
     }
 
     private fun fillMissingComposeArgs(passedComposeArgs: Array<out Any>?): Array<out Any?> {

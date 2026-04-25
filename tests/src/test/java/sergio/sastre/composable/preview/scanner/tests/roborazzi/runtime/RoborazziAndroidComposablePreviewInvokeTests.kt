@@ -1,7 +1,5 @@
 package sergio.sastre.composable.preview.scanner.tests.roborazzi.runtime
 
-import androidx.compose.ui.tooling.preview.PreviewWrapper
-import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.RoborazziComposeOptions
 import com.github.takahirom.roborazzi.background
@@ -20,9 +18,6 @@ import sergio.sastre.composable.preview.scanner.android.device.domain.Robolectri
 import sergio.sastre.composable.preview.scanner.android.screenshotid.AndroidPreviewScreenshotIdBuilder
 import sergio.sastre.composable.preview.scanner.core.annotations.RequiresShowStandardStreams
 import sergio.sastre.composable.preview.scanner.core.preview.ComposablePreview
-import sergio.sastre.composable.preview.scanner.core.preview.getAnnotation
-import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
 
 /**
  * These tests ensure that the invoke() function of a ComposablePreview works as expected
@@ -40,7 +35,6 @@ class RoborazziAndroidComposablePreviewInvokeTests(
             AndroidComposablePreviewScanner()
                 .enableScanningLogs()
                 .scanPackageTrees("sergio.sastre.composable.preview.scanner")
-                .includeAnnotationInfoForAllOf(PreviewWrapper::class.java)
                 .includePrivatePreviews()
                 .getPreviews()
         }
@@ -56,8 +50,6 @@ class RoborazziAndroidComposablePreviewInvokeTests(
                 .doNotIgnoreMethodParametersType()
                 .build()
         }.png"
-
-    private val wrapperCache = mutableMapOf<KClass<out PreviewWrapperProvider>, PreviewWrapperProvider>()
 
     @OptIn(ExperimentalRoborazziApi::class)
     @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -82,11 +74,7 @@ class RoborazziAndroidComposablePreviewInvokeTests(
                 locale(preview.previewInfo.locale)
             },
         ) {
-            val wrapperClass = preview.getAnnotation<PreviewWrapper>()?.wrapper
-            val wrapperInstance = wrapperClass?.let {
-                wrapperCache.getOrPut(it) { it.createInstance() }
-            }
-            wrapperInstance?.Wrap { preview() } ?: preview()
+            preview()
         }
     }
 }

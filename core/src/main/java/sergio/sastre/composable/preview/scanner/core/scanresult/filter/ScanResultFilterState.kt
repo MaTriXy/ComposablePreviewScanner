@@ -2,11 +2,13 @@ package sergio.sastre.composable.preview.scanner.core.scanresult.filter
 
 import io.github.classgraph.MethodInfo
 
+internal const val PREVIEW_WRAPPER_ANNOTATION = "androidx.compose.ui.tooling.preview.PreviewWrapper"
+
 data class ScanResultFilterState<T>(
     val overriddenClasspath: Boolean = false,
     val excludedAnnotations: List<Class<out Annotation>> = emptyList(),
     val includedAnnotations: List<Class<out Annotation>> = emptyList(),
-    val namesOfIncludeAnnotationsInfo: Set<String> = emptySet(),
+    val namesOfIncludeAnnotationsInfo: Set<String> = setOf(PREVIEW_WRAPPER_ANNOTATION),
     val meetsPreviewCriteria: (T) -> Boolean = { true },
     val includesPrivatePreviews: Boolean = false,
 ) {

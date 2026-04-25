@@ -113,7 +113,7 @@ class ScanResultFilter<T> internal constructor(
             annotations = annotations.toList()
         )
         scanResultFilterState = scanResultFilterState.copy(
-            namesOfIncludeAnnotationsInfo = annotations.map { it.name }.toSet()
+            namesOfIncludeAnnotationsInfo = scanResultFilterState.namesOfIncludeAnnotationsInfo + annotations.map { it.name }.toSet()
         )
         return this
     }
