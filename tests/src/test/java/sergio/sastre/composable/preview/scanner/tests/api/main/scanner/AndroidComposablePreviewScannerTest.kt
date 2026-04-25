@@ -1,8 +1,10 @@
 package sergio.sastre.composable.preview.scanner.tests.api.main.scanner
 
 import android.content.res.Configuration
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import sergio.sastre.composable.preview.scanner.AndroidStringProvider
 import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeTrue
@@ -290,7 +292,8 @@ class AndroidComposablePreviewScannerTest {
 
     @Test(expected = FileNotFoundException::class)
     fun `GIVEN a scan result file doesn't exist WHEN scan result read from file THEN throw File does not exist exception`() {
-        val scanResultFile = testFilePath(ScanResultFileName.ANDROID_COMPOSABLE_PREVIEW_SCANNER_TEST)
+        val scanResultFile =
+            testFilePath(ScanResultFileName.ANDROID_COMPOSABLE_PREVIEW_SCANNER_TEST)
         scanResultFile.delete()
         assumeFalse(scanResultFile.exists())
 
@@ -413,6 +416,7 @@ class AndroidComposablePreviewScannerTest {
 
     @Repeatable
     annotation class RepeatableAnnotation
+
     @Test
     fun `GIVEN includeAnnotationInfoForAllOf contains any Repeatable annotation THEN it throws RepeatableAnnotationNotSupportedException`() {
         val exception = assertThrows(RepeatableAnnotationNotSupportedException::class.java) {
@@ -422,7 +426,35 @@ class AndroidComposablePreviewScannerTest {
                 .getPreviews()
         }
 
-        assertEquals("includeAnnotationInfoForAllOf() cannot be called with Repeatable annotations 'RepeatableAnnotation'", exception.message)
+        assertEquals(
+            "includeAnnotationInfoForAllOf() cannot be called with Repeatable annotations 'RepeatableAnnotation'",
+            exception.message
+        )
+    }
+
+    @Test
+    fun `GIVEN includeAnnotationInfoForAllOf not called WHEN targeted Previews are annotated with PreviewWrapper THEN it still includes PreviewWrapper info`() {
+        val previews = AndroidComposablePreviewScanner()
+            .scanPackageTrees("sergio.sastre.composable.preview.scanner.android.previewwrapper")
+            .getPreviews()
+
+        assertTrue(
+            "PreviewWrapper annotation should be included'",
+            previews.all { it.getAnnotation<PreviewWrapper>() != null }
+        )
+    }
+
+    @Test
+    fun `GIVEN includeAnnotationInfoForAllOf called without PreviewWrapper WHEN targeted Previews are annotated with PreviewWrapper THEN it still includes PreviewWrapper info`() {
+        val previews = AndroidComposablePreviewScanner()
+            .scanPackageTrees("sergio.sastre.composable.preview.scanner.android.previewwrapper")
+            .includeAnnotationInfoForAllOf(ScreenshotTestConfig::class.java)
+            .getPreviews()
+
+        assertTrue(
+            "PreviewWrapper annotation should be included'",
+            previews.all { it.getAnnotation<PreviewWrapper>() != null }
+        )
     }
 
     @Test
@@ -434,7 +466,10 @@ class AndroidComposablePreviewScannerTest {
                 .getPreviews()
         }
 
-        assertEquals("excludeIfAnnotatedWithAnyOf() cannot be called with Repeatable annotations 'RepeatableAnnotation'", exception.message)
+        assertEquals(
+            "excludeIfAnnotatedWithAnyOf() cannot be called with Repeatable annotations 'RepeatableAnnotation'",
+            exception.message
+        )
     }
 
     @Test
@@ -446,7 +481,10 @@ class AndroidComposablePreviewScannerTest {
                 .getPreviews()
         }
 
-        assertEquals("includeIfAnnotatedWithAnyOf() cannot be called with Repeatable annotations 'RepeatableAnnotation'", exception.message)
+        assertEquals(
+            "includeIfAnnotatedWithAnyOf() cannot be called with Repeatable annotations 'RepeatableAnnotation'",
+            exception.message
+        )
     }
 
     @Test(expected = IllegalArgumentException::class)
