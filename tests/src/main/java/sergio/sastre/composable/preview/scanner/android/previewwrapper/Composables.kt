@@ -12,7 +12,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 
-class SampleScaffoldWrapper : PreviewWrapperProvider {
+private class PrivateScaffoldWrapper : PreviewWrapperProvider {
+    @Composable
+    override fun Wrap(content: @Composable () -> Unit) {
+        Scaffold { padding ->
+            Box(
+                Modifier
+                    .padding(padding)
+                    .background(Color.Blue)
+            ) { content() }
+        }
+    }
+}
+
+class PublicScaffoldWrapper: PreviewWrapperProvider {
     @Composable
     override fun Wrap(content: @Composable () -> Unit) {
         Scaffold { padding ->
@@ -27,7 +40,14 @@ class SampleScaffoldWrapper : PreviewWrapperProvider {
 
 @Preview
 @Composable
-@PreviewWrapper(wrapper = SampleScaffoldWrapper::class)
-fun PreviewWrapperSample() {
-    Text("PreviewWrapperSample")
+@PreviewWrapper(wrapper = PrivateScaffoldWrapper::class)
+fun PrivatePreviewWrapper() {
+    Text("PrivatePreviewWrapper")
+}
+
+@Preview
+@Composable
+@PreviewWrapper(wrapper = PublicScaffoldWrapper::class)
+fun DefaultParamPublicPreviewWrapper(arg1: String = "DefaultParamPublicPreviewWrapper") {
+    Text(arg1)
 }

@@ -8,7 +8,6 @@ import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
-import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
 
 /**
@@ -97,11 +96,15 @@ internal object PreviewWrapperCache {
             if (cached != null) {
                 return cached
             }
-            val instance = Class.forName(className).kotlin.createInstance()
+            val clazz = Class.forName(className)
+            val instance = clazz
+                .getDeclaredConstructor()
+                .apply { isAccessible = true }
+                .newInstance()
             // Find Wrap(Function2, Composer, Int)
-            val wrapMethod = instance.javaClass.methods.find {
-                it.name == "Wrap" && it.parameterCount >= 3
-            }
+            val wrapMethod = (clazz.methods + clazz.declaredMethods)
+                .find { it.name == "Wrap" && it.parameterCount >= 3 }
+                ?.apply { isAccessible = true }
             val newPair = instance to wrapMethod
             val existing = cache.putIfAbsent(className, newPair)
             existing ?: newPair
