@@ -102,6 +102,8 @@ class ScanResultFilter<T> internal constructor(
      * This makes that info in the annotations accessible in your screenshot tests
      * via (following the previous example) ComposablePreview.getAnnotation<ScreenshotTestConfig>()
      *
+     * Consecutive calls to this method will accumulate (union) the annotation info names.
+     *
      * WARNING: throws a [RepeatableAnnotationNotSupportedException] if any of the annotations is repeatable
      */
     override fun includeAnnotationInfoForAllOf(vararg annotations: Class<out Annotation>): ScanResultFilter<T> {
@@ -113,7 +115,7 @@ class ScanResultFilter<T> internal constructor(
             annotations = annotations.toList()
         )
         scanResultFilterState = scanResultFilterState.copy(
-            namesOfIncludeAnnotationsInfo = scanResultFilterState.namesOfIncludeAnnotationsInfo + annotations.map { it.name }.toSet()
+            namesOfIncludeAnnotationsInfo = scanResultFilterState.namesOfIncludeAnnotationsInfo + annotations.map { it.name }
         )
         return this
     }

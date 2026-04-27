@@ -3,6 +3,7 @@ package sergio.sastre.composable.preview.scanner.android.customextraannotation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import sergio.sastre.composable.preview.scanner.android.included.IncludeScreenshot
 import kotlin.reflect.KClass
 
 class Foo {
@@ -35,6 +36,7 @@ fun Example() {
     Text("Example 2")
 }
 
+@IncludeScreenshot
 @ScreenshotTestConfig(
     device = Device.PIXEL_XL,
     locale = "ar",

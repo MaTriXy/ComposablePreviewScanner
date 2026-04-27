@@ -458,6 +458,26 @@ class AndroidComposablePreviewScannerTest {
     }
 
     @Test
+    fun `GIVEN includeAnnotationInfoForAllOf called multiple times THEN it accumulates (union) all annotations`() {
+        val previews = AndroidComposablePreviewScanner()
+            .scanPackageTrees("sergio.sastre.composable.preview.scanner.android.customextraannotation")
+            .includeAnnotationInfoForAllOf(ScreenshotTestConfig::class.java)
+            .includeAnnotationInfoForAllOf(IncludeScreenshot::class.java)
+            .getPreviews()
+
+        val preview = previews.first()
+
+        assertTrue(
+            "ScreenshotTestConfig annotation should be included",
+            preview.getAnnotation<ScreenshotTestConfig>() != null
+        )
+        assertTrue(
+            "IncludeScreenshot annotation should be included",
+            preview.getAnnotation<IncludeScreenshot>() != null
+        )
+    }
+
+    @Test
     fun `GIVEN excludeIfAnnotatedWithAnyOf contains any Repeatable annotation THEN it throws RepeatableAnnotationNotSupportedException`() {
         val exception = assertThrows(RepeatableAnnotationNotSupportedException::class.java) {
             AndroidComposablePreviewScanner()
