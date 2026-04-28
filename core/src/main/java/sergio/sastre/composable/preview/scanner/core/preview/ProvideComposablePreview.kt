@@ -19,7 +19,8 @@ class ProvideComposablePreview<T> {
             arrayOf(ComposablePreview::class.java),
             ComposablePreviewInvocationHandler(
                 composableMethod = composablePreviewMapper.previewMethod,
-                parameter = parameter
+                parameter = parameter,
+                annotationsInfo = composablePreviewMapper.annotationsInfo
             ),
         ) as ComposablePreview<T>
 

@@ -1,6 +1,9 @@
 package sergio.sastre.composable.preview.scanner.core.preview
 
 import sergio.sastre.composable.preview.scanner.core.preview.exception.PreviewParameterIsNotFirstArgumentException
+import io.github.classgraph.AnnotationClassRef
+import io.github.classgraph.AnnotationInfoList
+import sergio.sastre.composable.preview.scanner.core.scanresult.filter.PREVIEW_WRAPPER_ANNOTATION
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -15,6 +18,7 @@ import kotlin.reflect.jvm.kotlinFunction
 internal class ComposablePreviewInvocationHandler(
     private val composableMethod: Method,
     private val parameter: Any?,
+    private val annotationsInfo: AnnotationInfoList?,
 ) : InvocationHandler {
 
     /**
@@ -24,15 +28,48 @@ internal class ComposablePreviewInvocationHandler(
     object NoParameter
 
     override fun invoke(proxy: Any?, method: Method?, args: Array<out Any>?): Any? {
-        val safeArgs: Array<out Any?> = fillMissingComposeArgs(args)
+        if (method?.name != "invoke") return method?.invoke(this, *(args ?: emptyArray()))
+
+        val safeArgs = fillMissingComposeArgs(args)
+
+        // Extract composer and changed once, providing defaults if args are missing
+        val composer = args?.getOrNull(args.size - 2)
+        val changed = args?.getOrNull(args.size - 1) as? Int ?: 0
+
+        val previewWrapperData = getPreviewWrapperProvider()
+        val wrapMethod = previewWrapperData?.second
+        // Only wrap if we have both the method AND the minimum required compose arguments
+        val canWrapPreview = wrapMethod != null && (args?.size ?: 0) >= 2
+        return when (canWrapPreview) {
+            false -> invokeDirectly(composer, changed, safeArgs)
+            true -> {
+                val content: (Any?, Int) -> Unit = { c, i -> invokeDirectly(c, i, safeArgs) }
+                wrapMethod.invoke(previewWrapperData.first, content, composer, changed)
+            }
+        }
+    }
+
+    private fun invokeDirectly(composer: Any?, changed: Int, safeArgs: Array<out Any?>): Any? {
+        val allParams = composableMethod.kotlinFunction!!.parameters
+        val hasDefaultParams = allParams.any { it.isOptional }
+
+        // Update the composer and changed values in the arguments
+        val updatedArgs = arrayOf(*safeArgs)
+        if (updatedArgs.size >= (if (hasDefaultParams) 3 else 2)) {
+            val offset = if (hasDefaultParams) 1 else 0
+            updatedArgs[updatedArgs.size - 2 - offset] = composer
+            updatedArgs[updatedArgs.size - 1 - offset] = changed
+        }
+
         val safeArgsWithParam =
             when (parameter != NoParameter) {
-                true -> arrayOf(parameter, *safeArgs)
-                false -> safeArgs
+                true -> arrayOf(parameter, *updatedArgs)
+                false -> updatedArgs
             }
 
         val isInsideClass = !Modifier.isStatic(composableMethod.modifiers)
-        val kotlinComposableMethod = composableMethod.kotlinFunction!!.apply { isAccessible = true }
+        val kotlinComposableMethod =
+            composableMethod.kotlinFunction!!.apply { isAccessible = true }
         return when (isInsideClass) {
             false -> kotlinComposableMethod.call(*safeArgsWithParam)
             true -> kotlinComposableMethod.call(
@@ -40,6 +77,20 @@ internal class ComposablePreviewInvocationHandler(
                 *safeArgsWithParam
             )
         }
+    }
+
+    private fun getPreviewWrapperProvider(): Pair<Any, Method?>? {
+        val annotationParams = annotationsInfo
+            ?.firstOrNull { it.name == PREVIEW_WRAPPER_ANNOTATION }
+            ?.parameterValues
+            ?: return null
+
+        val wrapperClassRef = annotationParams
+            .firstOrNull { it.name == "wrapper" }
+            ?.value as? AnnotationClassRef
+            ?: return null
+
+        return PreviewWrapperCache.getProviderAndWrapMethod(wrapperClassRef.name)
     }
 
     private fun fillMissingComposeArgs(passedComposeArgs: Array<out Any>?): Array<out Any?> {
@@ -57,9 +108,9 @@ internal class ComposablePreviewInvocationHandler(
                 // and it'd throw an UndeclaredThrowableException
                 //
                 // Update: It seems that from AS Meerkat on, this is enforced :)
-                if (allParams.any { !it.isOptional && it.index != 0 }){
+                if (allParams.any { !it.isOptional && it.index != 0 }) {
                     throw PreviewParameterIsNotFirstArgumentException(
-                        className =  composableMethod.declaringClass.name,
+                        className = composableMethod.declaringClass.name,
                         methodName = composableMethod.name
                     )
                 }
@@ -80,7 +131,8 @@ internal class ComposablePreviewInvocationHandler(
                 // 3 params -> 111 -> 7
                 // 4 params -> 1111 -> 15
                 // x params -> 2 pow (x) - 1
-                val paramsMask: MutableList<Int> = mutableListOf(2.0.pow(allParams.size).toInt() - 1)
+                val paramsMask: MutableList<Int> =
+                    mutableListOf(2.0.pow(allParams.size).toInt() - 1)
                 return (defaultParamsAsNull.toMutableList() + safeArgs.toMutableList() + paramsMask).toTypedArray()
             }
         }

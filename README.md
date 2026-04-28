@@ -47,6 +47,7 @@ Help shape its future by taking [this quick survey](https://forms.gle/jcvggBxv14
 <sup>7</sup> [Showkase: Compose Multiplatform Support](https://github.com/airbnb/Showkase/issues/364)
 </br></br></br>
 ComposablePreviewScanner also works with:
+- **NEW*** `@PreviewWrapper` (since 0.9.0+) automatically. No changes required in the Screenshot Testing library using ComposablePreviewScanner.
 - `@PreviewParameters` (for Compose Multiplatform since 0.6.0+)
 - Multi-Previews, including  `@PreviewScreenSizes`, `@PreviewFontScales`, `@PreviewLightDark`, and `@PreviewDynamicColors` as well as custom multi-previews.
 - private `@Previews` (from version 0.1.3+)
