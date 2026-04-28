@@ -3,7 +3,6 @@ package sergio.sastre.composable.preview.scanner.core.preview
 import androidx.compose.runtime.Composable
 import io.github.classgraph.AnnotationClassRef
 import io.github.classgraph.AnnotationInfoList
-import sergio.sastre.composable.preview.scanner.core.scanresult.filter.PREVIEW_WRAPPER_ANNOTATION
 import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
@@ -57,14 +56,17 @@ inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
                 parameterType?.java?.isEnum == true -> {
                     // Resolve enum constant by its name
                     parameterType.java.enumConstants.firstOrNull { enumConstant ->
-                        (enumConstant as? Enum<*>)?.name == paramValue.toString().substringAfterLast(".")
+                        (enumConstant as? Enum<*>)?.name == paramValue.toString()
+                            .substringAfterLast(".")
                     }
                 }
+
                 parameterType == KClass::class -> {
                     (paramValue as? AnnotationClassRef)?.let {
                         Class.forName(it.name).kotlin
                     } ?: paramValue
                 }
+
                 else -> paramValue
             }
             annotationValues[parameter] = value
@@ -79,6 +81,7 @@ inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
                 throw e
             }
         }
+
         false -> null
     }
 }
@@ -102,8 +105,8 @@ internal object PreviewWrapperCache {
                 .apply { isAccessible = true }
                 .newInstance()
             // Find Wrap(Function2, Composer, Int)
-            val wrapMethod = (clazz.methods + clazz.declaredMethods)
-                .find { it.name == "Wrap" && it.parameterCount >= 3 }
+            val wrapMethod = clazz.declaredMethods
+                .find { it.name == "Wrap" }
                 ?.apply { isAccessible = true }
             val newPair = instance to wrapMethod
             val existing = cache.putIfAbsent(className, newPair)
@@ -112,23 +115,4 @@ internal object PreviewWrapperCache {
             null
         }
     }
-}
-
-/**
- * Gets the wrapper provider for the [ComposablePreview] if it has the @PreviewWrapper annotation.
- * It uses reflection to avoid a direct dependency on the ui-tooling-preview library.
- *
- * @return The instance of the wrapper provider (e.g. PreviewWrapperProvider),
- *         or null if not found or cannot be instantiated.
- */
-fun <T : Any> ComposablePreview<*>.getPreviewWrapperProvider(): T? {
-    val annotationParams = otherAnnotationsInfo
-        ?.filter { it.name == PREVIEW_WRAPPER_ANNOTATION }
-        ?.firstOrNull()?.parameterValues
-        ?: return null
-
-    val wrapperClassRef = annotationParams.getValue("wrapper") as? AnnotationClassRef ?: return null
-
-    @Suppress("UNCHECKED_CAST")
-    return PreviewWrapperCache.getProviderAndWrapMethod(wrapperClassRef.name)?.first as? T
 }

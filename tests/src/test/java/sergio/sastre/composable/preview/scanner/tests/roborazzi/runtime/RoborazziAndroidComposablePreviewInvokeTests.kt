@@ -6,6 +6,7 @@ import com.github.takahirom.roborazzi.background
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.github.takahirom.roborazzi.locale
 import com.github.takahirom.roborazzi.size
+import com.github.takahirom.roborazzi.uiMode
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
@@ -72,6 +73,7 @@ class RoborazziAndroidComposablePreviewInvokeTests(
                     backgroundColor = preview.previewInfo.backgroundColor
                 )
                 locale(preview.previewInfo.locale)
+                uiMode(preview.previewInfo.uiMode)
             },
         ) {
             preview()

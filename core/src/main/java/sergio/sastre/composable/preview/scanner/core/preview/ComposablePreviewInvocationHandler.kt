@@ -101,7 +101,11 @@ internal class ComposablePreviewInvocationHandler(
             ?.firstOrNull()?.parameterValues
             ?: return null
 
-        val wrapperClassRef = annotationParams.getValue("wrapper") as? AnnotationClassRef ?: return null
+        val wrapperClassRef = annotationParams
+            .firstOrNull { it.name == "wrapper" }
+            ?.value as? AnnotationClassRef
+            ?: return null
+
         return PreviewWrapperCache.getProviderAndWrapMethod(wrapperClassRef.name)
     }
 
@@ -120,9 +124,9 @@ internal class ComposablePreviewInvocationHandler(
                 // and it'd throw an UndeclaredThrowableException
                 //
                 // Update: It seems that from AS Meerkat on, this is enforced :)
-                if (allParams.any { !it.isOptional && it.index != 0 }){
+                if (allParams.any { !it.isOptional && it.index != 0 }) {
                     throw PreviewParameterIsNotFirstArgumentException(
-                        className =  composableMethod.declaringClass.name,
+                        className = composableMethod.declaringClass.name,
                         methodName = composableMethod.name
                     )
                 }
@@ -143,7 +147,8 @@ internal class ComposablePreviewInvocationHandler(
                 // 3 params -> 111 -> 7
                 // 4 params -> 1111 -> 15
                 // x params -> 2 pow (x) - 1
-                val paramsMask: MutableList<Int> = mutableListOf(2.0.pow(allParams.size).toInt() - 1)
+                val paramsMask: MutableList<Int> =
+                    mutableListOf(2.0.pow(allParams.size).toInt() - 1)
                 return (defaultParamsAsNull.toMutableList() + safeArgs.toMutableList() + paramsMask).toTypedArray()
             }
         }

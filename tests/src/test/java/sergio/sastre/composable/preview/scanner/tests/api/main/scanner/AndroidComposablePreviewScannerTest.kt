@@ -439,7 +439,7 @@ class AndroidComposablePreviewScannerTest {
             .getPreviews()
 
         assertTrue(
-            "PreviewWrapper annotation should be included'",
+            "PreviewWrapper annotation should be included",
             previews.all { it.getAnnotation<PreviewWrapper>() != null }
         )
     }
@@ -452,7 +452,7 @@ class AndroidComposablePreviewScannerTest {
             .getPreviews()
 
         assertTrue(
-            "PreviewWrapper annotation should be included'",
+            "PreviewWrapper annotation should be included",
             previews.all { it.getAnnotation<PreviewWrapper>() != null }
         )
     }

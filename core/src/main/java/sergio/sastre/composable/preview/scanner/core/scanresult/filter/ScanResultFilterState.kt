@@ -4,6 +4,11 @@ import io.github.classgraph.MethodInfo
 
 internal const val PREVIEW_WRAPPER_ANNOTATION = "androidx.compose.ui.tooling.preview.PreviewWrapper"
 
+/**
+ * [namesOfIncludeAnnotationsInfo] always adds PreviewWrapper information as default even when callers do not provide any annotations
+ * This is desired, so when calling ComposablePreview.invoke(),
+ * it'll consider whether the Preview's Composable has to be wrapped accordingly.
+ */
 data class ScanResultFilterState<T>(
     val overriddenClasspath: Boolean = false,
     val excludedAnnotations: List<Class<out Annotation>> = emptyList(),
