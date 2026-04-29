@@ -8,6 +8,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 
 // 'private' to make sure it can also be accessed in tests
 private class AndroidStringProviderWithDisplayName : PreviewParameterProvider<String?> {
+
+    // Add method with same name but different signature to ensure
+    // the other method is picked when using reflection
+    fun getDisplayName(index: Int?): String? = "WRONG"
+
     override val values: Sequence<String?>
         get() = sequenceOf("Jim", "Jens", null)
 

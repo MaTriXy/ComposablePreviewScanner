@@ -21,7 +21,7 @@ open class PreviewScreenshotIdBuilder<T>(
         DISPLAY_NAME {
             override fun valueFor(preview: ComposablePreview<*>): String? =
                 (preview.previewIndexDisplayName?.replace(" ", "_"))
-                    ?: INDEX.valueFor(preview)
+                    ?: preview.previewIndex?.toString()
         };
 
         abstract fun valueFor(preview: ComposablePreview<*>): String?
