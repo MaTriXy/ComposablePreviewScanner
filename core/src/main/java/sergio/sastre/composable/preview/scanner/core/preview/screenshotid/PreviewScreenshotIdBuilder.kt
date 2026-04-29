@@ -58,6 +58,11 @@ open class PreviewScreenshotIdBuilder<T>(
         ignoreMethodName = true
     }
 
+    /**
+     * When using @PreviewParameters, it will default to the parameters DisplayName (if existing)
+     * instead of its index.
+     * You can override that behavior to always use index by calling this.
+     */
     fun replaceDisplayNameWithIndex() = apply {
         parameterIndexName = INDEX
     }
