@@ -240,8 +240,6 @@ class GenericComposablePreviewScreenshotIdTest(
                 .passPreviewWithInfo(methodParameters = ALL_UNSAFE_CHARS)
                 .doNotIgnoreMethodParametersType()
                 .build()
-                // remove leading "_" due to doNotIgnoreMethodParametersType()
-                //.substring(1)
 
         assertEquals(ALL_UNSAFE_CHARS, previewScreenshotId)
     }
