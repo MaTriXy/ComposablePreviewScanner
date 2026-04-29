@@ -803,7 +803,9 @@ AndroidPreviewScreenshotIdBuilder(preview)
     .ignoreClassName()
     .ignoreMethodName()
     // use this if you have previews in the same file with the same method name but different signature
-    .doNotIgnoreMethodParametersType() 
+    .doNotIgnoreMethodParametersType()
+    // use this if you prefer index instead of displayName when using PreviewParameters
+    .replaceDisplayNameWithIndex()
     .ignoreIdFor("heightDp")
     .ignoreIdFor("widthDp")
     .overrideDefaultIdFor(

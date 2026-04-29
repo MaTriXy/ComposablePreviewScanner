@@ -4,8 +4,11 @@ import io.github.classgraph.AnnotationInfoList
 import sergio.sastre.composable.preview.scanner.core.preview.ComposablePreview
 import sergio.sastre.composable.preview.scanner.core.preview.ProvideComposablePreview
 import java.lang.reflect.Method
+import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
+import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.isAccessible
 
 /**
@@ -60,6 +63,20 @@ data class ComposablePreviewWithPreviewParameterMapper<T>(
             ?.call(target)
     }
 
+    private fun Collection<KFunction<*>>.getDisplayNameFunction(): KFunction<*>? =
+        find { func ->
+            func.name == "getDisplayName" &&
+                    // (index: Int)
+                    func.valueParameters.singleOrNull()?.type?.let { type ->
+                        type.classifier == Int::class && !type.isMarkedNullable
+                    } == true &&
+                    // : String?
+                    func.returnType.let { type ->
+                        type.classifier == String::class && type.isMarkedNullable
+                    }
+        }
+            ?.apply { isAccessible = true }
+
     override fun mapToComposablePreviews(): Sequence<ComposablePreview<T>> {
         val previewParameterAnnotation = previewMethod.findPreviewParameterAnnotation()
             ?: return sequenceOf(provideComposablePreview(this))
@@ -77,12 +94,19 @@ data class ComposablePreviewWithPreviewParameterMapper<T>(
         val limit = getPropertyValue(previewParameterAnnotation, "limit") as? Int
             ?: Int.MAX_VALUE
 
+        val getDisplayNameMethod =
+            providerInstance::class.declaredMemberFunctions.getDisplayNameFunction()
+
         return values
             .take(limit)
             .mapIndexed { index, value ->
                 provideComposablePreview(
                     composablePreviewMapper = this,
                     previewIndex = index,
+                    previewParameterDisplayName = getDisplayNameMethod?.call(
+                        providerInstance,
+                        index
+                    ) as? String,
                     parameter = value,
                 )
             }
