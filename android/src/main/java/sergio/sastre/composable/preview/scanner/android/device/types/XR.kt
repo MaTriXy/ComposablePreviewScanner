@@ -6,6 +6,7 @@ import sergio.sastre.composable.preview.scanner.android.device.domain.Dimensions
 import sergio.sastre.composable.preview.scanner.android.device.domain.GetDeviceByIdentifier
 import sergio.sastre.composable.preview.scanner.android.device.domain.Identifier
 import sergio.sastre.composable.preview.scanner.android.device.domain.Orientation.LANDSCAPE
+import sergio.sastre.composable.preview.scanner.android.device.domain.ScreenSize
 import sergio.sastre.composable.preview.scanner.android.device.domain.Shape.NOTROUND
 import sergio.sastre.composable.preview.scanner.android.device.domain.Type.*
 import sergio.sastre.composable.preview.scanner.android.device.domain.Unit.PX
@@ -20,6 +21,7 @@ private val XR_DEFAULT = Device(
     densityDpi = 320,
     orientation = LANDSCAPE,
     shape = NOTROUND,
+    screenSize = ScreenSize.NORMAL,
     chinSize = ChinSize(0F, PX),
     type = XR
 )
@@ -38,5 +40,38 @@ enum class XR(
 
     XR_HEADSET(
         XR_DEFAULT.copy(identifier = Identifier.XR_HEADSET)
+    ),
+
+    XR_GLASSES(
+        device = Device(
+            identifier = Identifier.XR_GLASSES,
+            dimensions = Dimensions(
+                width = 1920f,
+                height = 1200f,
+                unit = PX
+            ),
+            densityDpi = 320,
+            orientation = LANDSCAPE,
+            shape = NOTROUND,
+            screenSize = ScreenSize.NORMAL,
+            chinSize = ChinSize(0F, PX),
+            type = XR
+        )
+    ),
+
+    AI_GLASSES(
+        device = Device(
+            identifier = Identifier.AI_GLASSES,
+            dimensions = Dimensions(
+                width = 450f,
+                height = 450f,
+                unit = PX
+            ),
+            densityDpi = 160,
+            orientation = LANDSCAPE,
+            shape = NOTROUND,
+            chinSize = ChinSize(0F, PX),
+            type = XR
+        )
     );
 }

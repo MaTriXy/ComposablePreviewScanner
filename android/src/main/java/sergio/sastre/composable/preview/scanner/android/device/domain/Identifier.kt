@@ -45,6 +45,10 @@ data class Identifier(val id: String? = null, val name: String? = null) {
         val PIXEL_9_PRO = Identifier(id = "pixel_9_pro", name = "Pixel 9 Pro")
         val PIXEL_9_PRO_XL = Identifier(id = "pixel_9_pro_xl", name = "Pixel 9 Pro XL")
         val PIXEL_9_PRO_FOLD = Identifier(id = "pixel_9_pro_fold", name = "Pixel 9 Pro Fold")
+        val PIXEL_10 = Identifier(id = "pixel_10", name = "Pixel 10")
+        val PIXEL_10_PRO = Identifier(id = "pixel_10_pro", name = "Pixel 10 Pro")
+        val PIXEL_10_PRO_XL = Identifier(id = "pixel_10_pro_xl", name = "Pixel 10 Pro XL")
+        val PIXEL_10_PRO_FOLD = Identifier(id = "pixel_10_pro_fold", name = "Pixel 10 Pro Fold")
         val PIXEL_TABLET = Identifier(id = "pixel_tablet", name = "Pixel Tablet")
         val PIXEL_C = Identifier(id = "pixel_c", name = "Pixel C")
         val PIXEL_FOLD = Identifier(id = "pixel_fold", name = "Pixel Fold")
@@ -63,6 +67,9 @@ data class Identifier(val id: String? = null, val name: String? = null) {
             Identifier(id = "wearos_small_round", name = "Wear OS Small Round")
         val WEAR_OS_LARGE_ROUND =
             Identifier(id = "wearos_large_round", name = "Wear OS Large Round")
+
+        val WEAR_OS_XL_ROUND =
+            Identifier(id = "wearos_xl_round", name = "Wear OS XL Round")
 
         // Desktop
         val SMALL_DESKTOP = Identifier(id = "desktop_small", name = "Small Desktop")
@@ -108,6 +115,10 @@ data class Identifier(val id: String? = null, val name: String? = null) {
         val XR_DEVICE = Identifier(id = "xr_device", name = "XR Device")
         val XR_HEADSET = // This is the updated Identifier of XR_DEVICE
             Identifier(id = "xr_headset_device", name = "XR Headset")
+
+        val XR_GLASSES = Identifier(id = "xr_glasses_device", name = "XR Glasses")
+
+        val AI_GLASSES = Identifier(id = "ai_glasses_device", name = "AI Glasses")
 
         // Generic Devices
         val MEDIUM_TABLET = Identifier(id = "medium_tablet", name = "Medium Tablet")
