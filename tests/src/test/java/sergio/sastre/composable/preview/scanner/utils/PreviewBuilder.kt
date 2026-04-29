@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package sergio.sastre.composable.preview.scanner.utils
 
 import androidx.compose.runtime.Composable

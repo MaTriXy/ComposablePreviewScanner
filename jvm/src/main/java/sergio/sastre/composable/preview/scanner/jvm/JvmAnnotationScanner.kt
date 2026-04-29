@@ -19,6 +19,9 @@ import java.lang.reflect.Method
  * like androidx.compose.desktop.ui.tooling.preview.Preview, and therefore it cannot be found by ClassGraph.
  * In such case, that @preview can be extra annotated with a custom annotation -> annotationToScanClassName
  */
+@Deprecated(
+    message = "The :jvm module is deprecated and will be removed in 0.10.0. Use Android Previews instead.",
+)
 class JvmAnnotationScanner(
     annotationToScanClassName: String
 ) : ComposablePreviewScanner<JvmAnnotationInfo>(

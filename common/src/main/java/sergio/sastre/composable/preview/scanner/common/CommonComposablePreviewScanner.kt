@@ -20,6 +20,9 @@ import java.lang.reflect.Method
  * WARNING: Since ComposablePreviewScanner is based on ClassGraph, which is a Jvm-based Class Scanner,
  * this can only be used inside jvm sources, like Desktop and Android.
  */
+@Deprecated(
+    message = "The :common module is deprecated and will be removed in 0.10.0. Use Android Previews instead.",
+)
 class CommonComposablePreviewScanner : ComposablePreviewScanner<CommonPreviewInfo>(
     findComposableWithPreviewsInClass = CommonComposablePreviewFinder()
 ) {
