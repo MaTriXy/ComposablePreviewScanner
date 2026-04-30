@@ -6,14 +6,15 @@ package sergio.sastre.composable.preview.scanner.glance {
   }
 
   public final class GlancePreviewInfo {
+    ctor public GlancePreviewInfo();
     ctor public GlancePreviewInfo(optional int widthDp, optional int heightDp);
     method public int component1();
     method public int component2();
-    method public sergio.sastre.composable.preview.scanner.glance.GlancePreviewInfo copy(int widthDp, int heightDp);
-    method public int getHeightDp();
-    method public int getWidthDp();
-    property public final int heightDp;
-    property public final int widthDp;
+    method public sergio.sastre.composable.preview.scanner.glance.GlancePreviewInfo copy(optional int widthDp, optional int heightDp);
+    method @InaccessibleFromKotlin public int getHeightDp();
+    method @InaccessibleFromKotlin public int getWidthDp();
+    property public int heightDp;
+    property public int widthDp;
   }
 
 }
@@ -29,10 +30,10 @@ package sergio.sastre.composable.preview.scanner.glance.configuration {
   public final class GlanceSnapshotConfigurator {
     ctor public GlanceSnapshotConfigurator(android.content.Context context);
     method public android.view.View composableToView(kotlin.jvm.functions.Function0<kotlin.Unit> composable);
-    method public android.content.Context getContext();
+    method @InaccessibleFromKotlin public android.content.Context getContext();
     method public sergio.sastre.composable.preview.scanner.glance.configuration.GlanceSnapshotConfigurator setSizeDp(int widthDp, int heightDp);
     method public <T> sergio.sastre.composable.preview.scanner.glance.configuration.GlanceSnapshotConfigurator setState(T state);
-    property public final android.content.Context context;
+    property public android.content.Context context;
   }
 
   public final class RobolectricDeviceQualifierBuilder {
