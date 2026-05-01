@@ -272,6 +272,7 @@ class DevicePreviewInfoParserTest {
         val roborazziDeviceQualifier: String,
     ) {
         // Android previews have a very weird matching for this device; id:Nexus 7 and name:Nexus 7 map to different devices
+
         Nexus7Name("name:Nexus 7", RobolectricDeviceQualifiers.Nexus7),
         Nexus7Id("id:Nexus 7 2013", RobolectricDeviceQualifiers.Nexus7),
 
@@ -289,6 +290,7 @@ class DevicePreviewInfoParserTest {
         Pixel7("id:pixel_7", RobolectricDeviceQualifiers.Pixel7),
         Pixel7Pro("id:pixel_7_pro", RobolectricDeviceQualifiers.Pixel7Pro),
 
+        WearOSXLRound("id:wearos_xl_round", RobolectricDeviceQualifiers.WearOSXLRound),
         WearOSLargeRound("id:wearos_large_round", RobolectricDeviceQualifiers.WearOSLargeRound),
         WearOSSmallRound("id:wearos_small_round", RobolectricDeviceQualifiers.WearOSSmallRound),
         WearOSSquare("id:wearos_square", RobolectricDeviceQualifiers.WearOSSquare),
@@ -301,7 +303,10 @@ class DevicePreviewInfoParserTest {
         Automotive1024pLandscape(
             "id:automotive_1024p_landscape",
             RobolectricDeviceQualifiers.Automotive1024plandscape
-        )
+        ),
+
+        XRHeadset("id:xr_headset_device", RobolectricDeviceQualifiers.XRHeadset),
+        XRGlasses("id:xr_glasses_device", RobolectricDeviceQualifiers.XRGlasses),
     }
 
     @Test
@@ -352,7 +357,7 @@ class DevicePreviewInfoParserTest {
         Pixel6("id:pixel_6", DeviceConfig.PIXEL_6),
         Pixel6Pro("id:pixel_6_pro", DeviceConfig.PIXEL_6_PRO),
         WearOSSmallRound("id:wearos_small_round", DeviceConfig.WEAR_OS_SMALL_ROUND),
-        WearOSSquare("id:wearos_square", DeviceConfig.WEAR_OS_SQUARE),
+        WearOSSquare("id:wearos_square", DeviceConfig.WEAR_OS_SQUARE)
     }
 
     @Test
@@ -465,6 +470,7 @@ class DevicePreviewInfoParserTest {
         Pixel7("name:Pixel 7", RobolectricDeviceQualifiers.Pixel7),
         Pixel7Pro("name:Pixel 7 Pro", RobolectricDeviceQualifiers.Pixel7Pro),
 
+        WearOSXLRound("name:Wear OS XL Round", RobolectricDeviceQualifiers.WearOSXLRound),
         WearOSLargeRound("name:Wear OS Large Round", RobolectricDeviceQualifiers.WearOSLargeRound),
         WearOSSmallRound("name:Wear OS Small Round", RobolectricDeviceQualifiers.WearOSSmallRound),
         WearOSSquare("name:Wear OS Square", RobolectricDeviceQualifiers.WearOSSquare),
@@ -479,7 +485,10 @@ class DevicePreviewInfoParserTest {
         Automotive1024pLandscape(
             "name:Automotive (1024p landscape)",
             RobolectricDeviceQualifiers.Automotive1024plandscape
-        )
+        ),
+
+        XRHeadset("name:XR Headset", RobolectricDeviceQualifiers.XRHeadset),
+        XRGlasses("name:XR Glasses", RobolectricDeviceQualifiers.XRGlasses),
     }
 
     @Test
