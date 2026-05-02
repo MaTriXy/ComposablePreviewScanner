@@ -1,6 +1,13 @@
 package sergio.sastre.composable.preview.scanner.tests.roborazzi.sourceset
 
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.github.takahirom.roborazzi.RoborazziComposeOptions
+import com.github.takahirom.roborazzi.RoborazziComposeOptions.Companion.invoke
+import com.github.takahirom.roborazzi.background
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.github.takahirom.roborazzi.locale
+import com.github.takahirom.roborazzi.size
+import com.github.takahirom.roborazzi.uiMode
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
@@ -75,6 +82,7 @@ class RoborazziSourceSetComposablePreviewInvokeTests(
                 .build()
         }.png"
 
+    @OptIn(ExperimentalRoborazziApi::class)
     @GraphicsMode(GraphicsMode.Mode.NATIVE)
     @Config(sdk = [30])
     @Test
@@ -82,7 +90,21 @@ class RoborazziSourceSetComposablePreviewInvokeTests(
         RobolectricDeviceQualifierBuilder.build(preview.previewInfo.device)?.run {
             RuntimeEnvironment.setQualifiers(this)
         }
-        captureRoboImage(filePath = screenshotName(preview)) {
+        captureRoboImage(
+            filePath = screenshotName(preview),
+            roborazziComposeOptions = RoborazziComposeOptions {
+                size(
+                    widthDp = preview.previewInfo.widthDp,
+                    heightDp = preview.previewInfo.heightDp
+                )
+                background(
+                    showBackground = preview.previewInfo.showBackground,
+                    backgroundColor = preview.previewInfo.backgroundColor
+                )
+                locale(preview.previewInfo.locale)
+                uiMode(preview.previewInfo.uiMode)
+            },
+        ) {
             preview()
         }
     }

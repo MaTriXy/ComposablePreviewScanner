@@ -3,13 +3,19 @@ package sergio.sastre.composable.preview.scanner.android.customextraannotation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import sergio.sastre.composable.preview.scanner.android.included.IncludeScreenshot
+import kotlin.reflect.KClass
 
 class Foo {
     val name = "foo"
 }
 
 annotation class MyAnnotation(
-    val device: Device
+    val device: Device,
+    val nested: NestedAnnotation
+)
+annotation class NestedAnnotation(
+    val klass: KClass<out Any>
 )
 
 enum class Device(val height: Int, val width: Int) {
@@ -21,8 +27,8 @@ annotation class ScreenshotTestConfig(
     val device: Device,
     val locale: String,
     val array: Array<String>,
-    // val myAnnotation: MyAnnotation
-    // val clazz: KClass<out Any>,
+    //val myAnnotation: MyAnnotation,
+    val clazz: KClass<out Any>,
 )
 
 @Composable
@@ -30,12 +36,13 @@ fun Example() {
     Text("Example 2")
 }
 
+@IncludeScreenshot
 @ScreenshotTestConfig(
     device = Device.PIXEL_XL,
     locale = "ar",
     array = ["1", "2"],
-    //myAnnotation = MyAnnotation(Device.PIXEL_XL)
-    //clazz = Foo::class
+    //myAnnotation = MyAnnotation(Device.PIXEL_XL, NestedAnnotation(Foo::class)),
+    clazz = Foo::class
 )
 @Preview
 @Composable

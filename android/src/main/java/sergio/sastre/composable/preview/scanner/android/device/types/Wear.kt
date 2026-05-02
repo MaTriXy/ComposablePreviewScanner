@@ -83,6 +83,23 @@ enum class Wear(
         )
     ),
 
+    WEAR_OS_XL_ROUND(
+        Device(
+            identifier = Identifier.WEAR_OS_XL_ROUND,
+            dimensions = Dimensions(
+                width = 480f,
+                height = 480f,
+                unit = PX
+            ),
+            densityDpi = 320,
+            orientation = PORTRAIT,
+            screenRatio = LONG,
+            shape = ROUND,
+            chinSize = ChinSize(0F, PX),
+            type = WEAR
+        )
+    ),
+
     WEAR_OS_RECT(
         WEAR_OS_RECT_DEFAULT.copy(identifier = Identifier.WEAR_OS_RECT)
     ),

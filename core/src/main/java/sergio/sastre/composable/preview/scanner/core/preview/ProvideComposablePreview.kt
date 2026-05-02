@@ -11,6 +11,7 @@ class ProvideComposablePreview<T> {
     operator fun invoke(
         composablePreviewMapper: ComposablePreviewMapper<T>,
         previewIndex: Int? = null,
+        previewParameterDisplayName: String? = null,
         parameter: Any? = ComposablePreviewInvocationHandler.NoParameter,
     ): ComposablePreview<T> {
 
@@ -19,7 +20,8 @@ class ProvideComposablePreview<T> {
             arrayOf(ComposablePreview::class.java),
             ComposablePreviewInvocationHandler(
                 composableMethod = composablePreviewMapper.previewMethod,
-                parameter = parameter
+                parameter = parameter,
+                annotationsInfo = composablePreviewMapper.annotationsInfo
             ),
         ) as ComposablePreview<T>
 
@@ -28,6 +30,7 @@ class ProvideComposablePreview<T> {
         return object : ComposablePreview<T> by proxy {
             override val previewInfo: T = composablePreviewMapper.previewInfo
             override val previewIndex: Int? = previewIndex
+            override val previewIndexDisplayName: String? = previewParameterDisplayName
             override val otherAnnotationsInfo = composablePreviewMapper.annotationsInfo
             override val declaringClass: String =
                 composablePreviewMapper.previewMethod.declaringClass.toClassName()

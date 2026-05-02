@@ -31,6 +31,7 @@ import kotlin.math.ceil
  *
  * ./gradlew :tests:recordPaparazziDebug --tests 'PaparazziCommonComposablePreviewInvokeTests' -Plibrary=paparazzi
  */
+@Suppress("DEPRECATION")
 @RunWith(Parameterized::class)
 class PaparazziCommonComposablePreviewInvokeTests(
     private val preview: ComposablePreview<CommonPreviewInfo>,

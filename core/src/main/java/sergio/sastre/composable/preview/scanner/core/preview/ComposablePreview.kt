@@ -1,7 +1,10 @@
 package sergio.sastre.composable.preview.scanner.core.preview
 
 import androidx.compose.runtime.Composable
+import io.github.classgraph.AnnotationClassRef
 import io.github.classgraph.AnnotationInfoList
+import java.lang.reflect.Method
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.primaryConstructor
@@ -18,6 +21,7 @@ import kotlin.reflect.full.primaryConstructor
 interface ComposablePreview<T> {
     val previewInfo: T
     val previewIndex: Int?
+    val previewIndexDisplayName: String?
     val otherAnnotationsInfo: AnnotationInfoList?
     val declaringClass: String
     val methodName: String
@@ -35,7 +39,6 @@ interface ComposablePreview<T> {
  * 1. Repeatable annotations -> if duplicated only one is taken
  * 2. Annotations that have as params any of the following types (throws exceptions):
  *  2.1. Annotation
- *  2.2  KClass
  */
 inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
     val annotationParams = otherAnnotationsInfo
@@ -50,13 +53,22 @@ inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
         val parameter = primaryConstructor?.parameters?.find { it.name == paramName }
         if (parameter != null) {
             val parameterType = parameter.type.classifier as? KClass<*>
-            val value = if (parameterType?.java?.isEnum == true) {
-                // Resolve enum constant by its name
-                parameterType.java.enumConstants.firstOrNull { enumConstant ->
-                    (enumConstant as? Enum<*>)?.name == paramValue.toString().substringAfterLast(".")
+            val value = when {
+                parameterType?.java?.isEnum == true -> {
+                    // Resolve enum constant by its name
+                    parameterType.java.enumConstants.firstOrNull { enumConstant ->
+                        (enumConstant as? Enum<*>)?.name == paramValue.toString()
+                            .substringAfterLast(".")
+                    }
                 }
-            } else {
-                paramValue
+
+                parameterType == KClass::class -> {
+                    (paramValue as? AnnotationClassRef)?.let {
+                        Class.forName(it.name).kotlin
+                    } ?: paramValue
+                }
+
+                else -> paramValue
             }
             annotationValues[parameter] = value
         }
@@ -70,6 +82,38 @@ inline fun <reified T : Annotation> ComposablePreview<*>.getAnnotation(): T? {
                 throw e
             }
         }
+
         false -> null
+    }
+}
+
+/**
+ * A thread-safe in-memory cache for PreviewWrapperProvider instances and their Wrap method.
+ * Internal to the core module to avoid leaking state to users while remaining accessible to extensions.
+ */
+internal object PreviewWrapperCache {
+    private val cache = ConcurrentHashMap<String, Pair<Any, Method?>>()
+
+    fun getProviderAndWrapMethod(className: String): Pair<Any, Method?>? {
+        return try {
+            val cached = cache[className]
+            if (cached != null) {
+                return cached
+            }
+            val clazz = Class.forName(className)
+            val instance = clazz
+                .getDeclaredConstructor()
+                .apply { isAccessible = true }
+                .newInstance()
+            // Find Wrap(Function2, Composer, Int)
+            val wrapMethod = clazz.declaredMethods
+                .find { it.name == "Wrap" }
+                ?.apply { isAccessible = true }
+            val newPair = instance to wrapMethod
+            val existing = cache.putIfAbsent(className, newPair)
+            existing ?: newPair
+        } catch (e: Exception) {
+            null
+        }
     }
 }

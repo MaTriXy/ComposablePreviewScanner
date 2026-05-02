@@ -6,6 +6,7 @@ import sergio.sastre.composable.preview.scanner.android.device.domain.Device
 import sergio.sastre.composable.preview.scanner.android.device.domain.Dimensions
 import sergio.sastre.composable.preview.scanner.android.device.domain.GetDeviceByIdentifier
 import sergio.sastre.composable.preview.scanner.android.device.domain.Identifier
+import sergio.sastre.composable.preview.scanner.android.device.domain.Orientation
 import sergio.sastre.composable.preview.scanner.android.device.domain.Orientation.LANDSCAPE
 import sergio.sastre.composable.preview.scanner.android.device.domain.Orientation.PORTRAIT
 import sergio.sastre.composable.preview.scanner.android.device.domain.ScreenRatio.LONG
@@ -546,6 +547,70 @@ enum class Phone(
             type = PHONE
         )
     ),
+    PIXEL_10(
+        Device(
+            identifier = Identifier.PIXEL_10,
+            dimensions = Dimensions(
+                width = 1080f,
+                height = 2424f,
+                unit = PX
+            ),
+            densityDpi = 420,
+            orientation = PORTRAIT,
+            shape = NOTROUND,
+            chinSize = ChinSize(0F, PX),
+            type = PHONE
+        )
+    ),
+
+    PIXEL_10_PRO(
+        Device(
+            identifier = Identifier.PIXEL_10_PRO,
+            dimensions = Dimensions(
+                width = 1280f,
+                height = 2856f,
+                unit = PX
+            ),
+            densityDpi = 480,
+            orientation = PORTRAIT,
+            shape = NOTROUND,
+            chinSize = ChinSize(0F, PX),
+            type = PHONE
+        )
+    ),
+
+    PIXEL_10_PRO_XL(
+        Device(
+            identifier = Identifier.PIXEL_10_PRO_XL,
+            dimensions = Dimensions(
+                width = 1344f,
+                height = 2992f,
+                unit = PX
+            ),
+            densityDpi = 480,
+            orientation = PORTRAIT,
+            shape = NOTROUND,
+            chinSize = ChinSize(0F, PX),
+            type = PHONE
+        )
+    ),
+
+    PIXEL_10_PRO_FOLD(
+        Device(
+            identifier = Identifier.PIXEL_10_PRO_FOLD,
+            dimensions = Dimensions(
+                width = 2076f,
+                height = 2152f,
+                unit = PX
+            ),
+            densityDpi = 420,
+            orientation = LANDSCAPE,
+            shape = NOTROUND,
+            chinSize = ChinSize(0F, PX),
+            type = PHONE
+        )
+    ),
+
     PIXEL_FOLD(
         Device(
             identifier = Identifier.PIXEL_FOLD,
