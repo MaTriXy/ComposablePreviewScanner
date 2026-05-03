@@ -849,12 +849,12 @@ createScreenshotIdFor(preview) will generate the following id: `"MyClass.MyCompo
 Since 0.4.0, ComposablePreviewScanner also provides `DevicePreviewInfoParser.parse(device: String)`
 which returns a `Device` object containing all the necessary information to support different devices in your Roborazzi & Paparazzi screenshot tests!
 
-It can parse ALL possible combinations of "device strings" up to Android Studio Narwhal, namely:
+It can parse ALL possible combinations of "device strings" up to Android Studio Quail, namely:
 ```kotlin
 // The over 80 devices supported either by id and/or name, for instance:
-@Preview(device = "id:pixel_9_pro")
-@Preview(device = "name:Pixel 9 Pro")
-@Preview(device = "spec:parent=pixel_9_pro, orientation=landscape, navigation=buttons")
+@Preview(device = "id:pixel_10_pro")
+@Preview(device = "name:Pixel 10 Pro")
+@Preview(device = "spec:parent=pixel_10_pro, orientation=landscape, navigation=buttons")
 
 // And custom devices
 @Preview(device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420, isRound = false, chinSize = 0dp, cutout = corner")
